@@ -193,6 +193,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
     <div class="logo">HARMONY RENTCAR</div>
     <h1>파트너즈 견적기</h1>
     <p>인가된 파트너만 접근할 수 있습니다</p>
+    <input type="text" id="uid" placeholder="아이디 입력" style="margin-bottom:8px;"/>
     <input type="password" id="pw" placeholder="비밀번호 입력"/>
     <button onclick="doLogin()">로그인</button>
     <div id="lerr"></div>
@@ -353,22 +354,32 @@ window.onload = () => { if (token) showApp(); };
 document.getElementById("pw").addEventListener("keydown", e => { if(e.key==="Enter") doLogin(); });
 async function doLogin() {
   const pw = document.getElementById("pw").value;
+  const uid = document.getElementById("uid").value.trim();
   const err = document.getElementById("lerr");
   err.textContent = "";
+  if (!uid) { err.textContent = "아이디를 입력하세요."; return; }
   if (!pw) { err.textContent = "비밀번호를 입력하세요."; return; }
   try {
     const r = await fetch(`${WORKER_URL}/api/login`, {
-      method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({password:pw})
+      method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({id:uid, password:pw})
     });
     const d = await r.json();
-    if (d.success) { token = d.token; sessionStorage.setItem("lt", token); showApp(); }
-    else err.textContent = d.message || "비밀번호가 틀렸습니다.";
+    if (d.success) {
+      token = d.token;
+      sessionStorage.setItem("lt", token);
+      // 추가P 권한 적용
+      const epsWrap = document.getElementById("eps-wrap");
+      if (epsWrap) epsWrap.style.display = d.canExtraP ? "" : "none";
+      showApp();
+    }
+    else err.textContent = d.message || "아이디 또는 비밀번호가 틀렸습니다.";
   } catch { err.textContent = "서버 연결 실패"; }
 }
 function doLogout() {
   token = null; sessionStorage.removeItem("lt");
   document.getElementById("login-screen").style.display = "flex";
   document.getElementById("app").style.display = "none";
+  document.getElementById("uid").value = "";
   document.getElementById("pw").value = "";
 }
 async function showApp() {
