@@ -398,8 +398,11 @@ async function loadVehicles() {
 }
 function uniqBy(arr, ck, nk) {
   const m = new Map();
-  arr.forEach(v => { if (!m.has(v[ck])) m.set(v[ck], v[nk]); });
-  return [...m.entries()];
+  arr.forEach(v => {
+    const key = v[ck] + '||' + v[nk];
+    if (!m.has(key)) m.set(key, [v[ck], v[nk]]);
+  });
+  return [...m.values()];
 }
 function fillBrands() {
   const s = document.getElementById("s-brand");
@@ -411,7 +414,7 @@ function onBrand() {
   const f = vehicles.filter(v => v.브랜드코드===bc);
   const s = document.getElementById("s-series");
   s.innerHTML = '<option value="">선택</option>';
-  uniqBy(f,"시리즈코드","시리즈명").forEach(([c,n]) => s.innerHTML += `<option value="${c}">${n}</option>`);
+  uniqBy(f,"시리즈코드","시리즈명").forEach(([c,n]) => s.innerHTML += `<option value="${c}||${n}">${n}</option>`);
   s.disabled = !bc;
   document.getElementById("s-lineup").innerHTML = '<option value="">선택</option>';
   document.getElementById("s-lineup").disabled = true;
@@ -419,8 +422,9 @@ function onBrand() {
 }
 function onSeries() {
   const bc = document.getElementById("s-brand").value;
-  const sc = document.getElementById("s-series").value;
-  const f = vehicles.filter(v => v.브랜드코드===bc && v.시리즈코드===sc);
+  const sv = document.getElementById("s-series").value;
+  const [sc, sn] = sv.split('||');
+  const f = vehicles.filter(v => v.브랜드코드===bc && v.시리즈코드===sc && v.시리즈명===sn);
   const sl = document.getElementById("s-lineup");
   sl.innerHTML = '<option value="">선택</option>';
   const seen = new Set();
