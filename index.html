@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>하모니렌트카 파트너즈 견적기</title>
+<title>하모니렌트카 파트너즈 견적기 (본사용)</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap');
 :root {
@@ -191,8 +191,8 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
 <div id="login-screen">
   <div class="lbox">
     <div class="logo">HARMONY RENTCAR</div>
-    <h1>파트너즈 견적기</h1>
-    <p>인가된 파트너만 접근할 수 있습니다</p>
+    <h1>파트너즈 견적기 (본사용)</h1>
+    <p>본 견적기는 본사용으로, 외부 공유 불가합니다.</p>
     <input type="text" id="uid" placeholder="아이디 입력" style="margin-bottom:8px;"/>
     <input type="password" id="pw" placeholder="비밀번호 입력"/>
     <button onclick="doLogin()">로그인</button>
@@ -204,7 +204,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
     <div class="h-left">
       <div class="h-logo">HARMONY<br>RENTCAR</div>
       <div class="h-div"></div>
-      <div class="h-title">파트너즈 견적기 · 구입형 리스 <span style="font-size:11px;font-weight:400;color:var(--muted);margin-left:6px;">ver.2026.07.08</span></div>
+      <div class="h-title">파트너즈 견적기 (본사용) · 구입형 리스</div>
     </div>
     <button class="h-out" onclick="doLogout()">로그아웃</button>
   </header>
@@ -259,7 +259,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
               <div class="sl-labels"><span>0%</span><span>25%</span><span>50%</span></div>
             </div>
           </div>
-          <div class="ip-row" id="eps-wrap" style="align-items:flex-start;margin-top:8px;">
+          <div class="ip-row" id="row-extrap" style="align-items:flex-start;margin-top:8px;">
             <label style="padding-top:2px;">추가 P</label>
             <div class="sl-wrap">
               <div class="sl-top">
@@ -290,6 +290,7 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
     </div>
     <div id="result">
       <div class="result-top">
+        <button class="profit-btn" onclick="openProfitModal()">📊 수익분석</button>
         <button class="print-btn" onclick="openModal()">
           <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
@@ -338,10 +339,72 @@ table.qt tr.qins td{background:#eef2fd;font-size:11px;color:#4a5578;}
 </div>
 
 <!-- 관리자 인증 모달 -->
+<div class="modal-bg" id="padmin-modal">
+  <div class="padmin-box">
+    <h3>🔒 수익분석 관리자 인증</h3>
+    <p>본사 직원 전용 기능입니다</p>
+    <input type="password" id="padmin-pw" placeholder="관리자 비밀번호"/>
+    <button onclick="doAdminLogin()">확인</button>
+    <div id="padmin-err"></div>
+  </div>
+</div>
 
 <!-- 수익분석 입력값 설정 모달 -->
+<div class="modal-bg" id="profit-input-modal">
+  <div class="padmin-box" style="width:400px;">
+    <h3>⚙️ 수익분석 변수 설정</h3>
+    <p>비워두면 기본값이 적용됩니다</p>
+    <div style="text-align:left;">
+      <div class="pf-input-row">
+        <label>이자수익 금리</label>
+        <div class="pf-input-wrap"><input type="text" id="pi-rate" placeholder="15"/><span>%</span></div>
+      </div>
+      <div class="pf-input-row">
+        <label>서비스비용 비율</label>
+        <div class="pf-input-wrap"><input type="text" id="pi-agency" placeholder="5"/><span>%</span></div>
+      </div>
+      <div class="pf-input-row">
+        <label>수수료</label>
+        <div class="pf-input-wrap"><input type="text" id="pi-fee" placeholder="300,000" oninput="fmtNum(this)"/><span>원</span></div>
+      </div>
+      <div class="pf-input-row">
+        <label>이전비용</label>
+        <div class="pf-input-wrap"><input type="text" id="pi-transfer" placeholder="0" oninput="fmtNum(this)"/><span>원</span></div>
+      </div>
+      <div class="pf-input-row">
+        <label>조달기준 비율</label>
+        <div class="pf-input-wrap"><input type="text" id="pi-fundratio" placeholder="90"/><span>%</span></div>
+      </div>
+      <div class="pf-input-row">
+        <label>보험료 (연간)</label>
+        <div class="pf-input-wrap"><input type="text" id="pi-insurance" placeholder="0" oninput="fmtNum(this)"/><span>원</span></div>
+      </div>
+      <div class="pf-input-row">
+        <label>예상 매각가 (48개월)</label>
+        <div class="pf-input-wrap"><input type="text" id="pi-saleprice48" placeholder="0" oninput="fmtNum(this)"/><span>원</span></div>
+      </div>
+      <div class="pf-input-row">
+        <label>예상 매각가 (60개월)</label>
+        <div class="pf-input-wrap"><input type="text" id="pi-saleprice60" placeholder="0" oninput="fmtNum(this)"/><span>원</span></div>
+      </div>
+    </div>
+    <button onclick="submitProfitInput()" style="margin-top:14px;">수익분석 계산</button>
+  </div>
+</div>
 
 <!-- 수익분석 모달 -->
+<div class="modal-bg" id="profit-modal">
+  <div class="modal-box" style="max-width:700px;">
+    <div class="modal-top">
+      <h3>📊 수익분석 (본사 전용)</h3>
+      <div class="modal-btns">
+        <button class="btn-close" onclick="document.getElementById('profit-input-modal').classList.add('open');document.getElementById('profit-modal').classList.remove('open');">⚙️ 변수 재설정</button>
+        <button class="btn-close" onclick="closeProfitModal()">닫기</button>
+      </div>
+    </div>
+    <div class="qdoc" id="profit-doc" style="padding:24px 28px;"></div>
+  </div>
+</div>
 <script>
 const WORKER_URL = "https://lease-estimator-api.hmn1234.workers.dev";
 let token = sessionStorage.getItem("lt") || null;
@@ -362,19 +425,12 @@ async function doLogin() {
       method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({id:uid, password:pw})
     });
     const d = await r.json();
-    if (d.success) {
-      token = d.token;
-      sessionStorage.setItem("lt", token);
-      // 추가P 권한 적용
-      const epsWrap = document.getElementById("eps-wrap");
-      if (epsWrap) epsWrap.style.display = d.canExtraP ? "" : "none";
-      showApp();
-    }
+    if (d.success) { token = d.token; sessionStorage.setItem("lt", token); sessionStorage.setItem("cep", d.canExtraP ? "1" : "0"); showApp(); }
     else err.textContent = d.message || "아이디 또는 비밀번호가 틀렸습니다.";
   } catch { err.textContent = "서버 연결 실패"; }
 }
 function doLogout() {
-  token = null; sessionStorage.removeItem("lt");
+  token = null; sessionStorage.removeItem("lt"); sessionStorage.removeItem("cep");
   document.getElementById("login-screen").style.display = "flex";
   document.getElementById("app").style.display = "none";
   document.getElementById("uid").value = "";
@@ -383,6 +439,9 @@ function doLogout() {
 async function showApp() {
   document.getElementById("login-screen").style.display = "none";
   document.getElementById("app").style.display = "flex";
+  const cep = sessionStorage.getItem("cep");
+  const epRow = document.getElementById("row-extrap");
+  if (epRow) epRow.style.display = (cep === "1") ? "" : "none";
   await loadVehicles();
 }
 async function loadVehicles() {
@@ -399,7 +458,7 @@ async function loadVehicles() {
 function uniqBy(arr, ck, nk) {
   const m = new Map();
   arr.forEach(v => {
-    const key = v[ck] + '||' + v[nk];
+    const key = v[ck] + '||' + v[nk]; // 시리즈코드+시리즈명 조합으로 K7/K7 HEV 구분
     if (!m.has(key)) m.set(key, [v[ck], v[nk]]);
   });
   return [...m.values()];
@@ -416,6 +475,7 @@ function onBrand() {
   s.innerHTML = '<option value="">선택</option>';
   uniqBy(f,"시리즈코드","시리즈명").forEach(([c,n]) => s.innerHTML += `<option value="${c}||${n}">${n}</option>`);
   s.disabled = !bc;
+
   document.getElementById("s-lineup").innerHTML = '<option value="">선택</option>';
   document.getElementById("s-lineup").disabled = true;
   clearDetail(); updateBtn();
@@ -637,8 +697,19 @@ function fmtDate(el) {
 }
 
 // ===== 수익분석 (관리자 전용) =====
+function openProfitModal() {
+  if (!selV) { alert("차량을 먼저 선택하고 견적을 계산해주세요."); return; }
+  if (adminToken) {
+    openProfitInput();
+  } else {
+    document.getElementById("padmin-pw").value = "";
+    document.getElementById("padmin-err").textContent = "";
+    document.getElementById("padmin-modal").classList.add("open");
+  }
+}
 
 function openProfitInput() {
+  document.getElementById("profit-input-modal").classList.add("open");
 }
 
 async function doAdminLogin() {
@@ -654,6 +725,7 @@ async function doAdminLogin() {
     if (d.success) {
       adminToken = d.token;
       sessionStorage.setItem("at", adminToken);
+      document.getElementById("padmin-modal").classList.remove("open");
       openProfitInput();
     } else {
       err.textContent = d.message || "비밀번호가 틀렸습니다.";
@@ -662,10 +734,283 @@ async function doAdminLogin() {
 }
 document.getElementById("padmin-pw")?.addEventListener("keydown", e => { if(e.key==="Enter") doAdminLogin(); });
 
+function getNum(id) {
+  const el = document.getElementById(id);
+  const raw = (el._raw !== undefined ? el._raw : el.value).toString().replace(/,/g,"");
+  return raw === "" ? null : parseFloat(raw);
+}
 
+async function submitProfitInput() {
+  const rateInput      = getNum("pi-rate");
+  const agencyInput    = getNum("pi-agency");
+  const feeInput       = getNum("pi-fee");
+  const transferInput  = getNum("pi-transfer");
+  const fundRatioInput = getNum("pi-fundratio");
+  const insuranceInput = getNum("pi-insurance");
+  const salePriceInput48 = getNum("pi-saleprice48");
+  const salePriceInput60 = getNum("pi-saleprice60");
 
+  const price = parseInt((document.getElementById("i-price")._raw || document.getElementById("i-price").value).replace(/,/g,"")) || selV.기본가격 || 0;
 
+  document.getElementById("profit-input-modal").classList.remove("open");
 
+  const currentExtraPRate = parseInt(document.getElementById("eps").value) / 100;
+  adminVars = {
+    interestRate: rateInput !== null ? rateInput/100 : null,
+    agencyRate: agencyInput !== null ? agencyInput/100 : null,
+    feeAmount: feeInput,
+    transferCost: transferInput,
+    fundRatio: fundRatioInput !== null ? fundRatioInput/100 : null,
+  };
+
+  try {
+    const r = await fetch(`${WORKER_URL}/api/profit`, {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        adminToken,
+        brandCode: selV.브랜드코드, seriesCode: selV.시리즈코드,
+        modelCode: null, lineupCode: selV.라인업코드,
+        price, depositRate: depRate/100,
+        prepayRate: parseInt(document.getElementById("ps").value) / 100,
+        extraPRate: parseInt(document.getElementById("eps").value) / 100,
+        regdate: document.getElementById("i-regdate").value || null,
+        insurance: insuranceInput || 0,
+        salePrice48: salePriceInput48 || 0,
+        salePrice60: salePriceInput60 || 0,
+        ...adminVars,
+      })
+    });
+    const d = await r.json();
+    if (!d.success) {
+      if (r.status === 401) {
+        adminToken = null; sessionStorage.removeItem("at");
+        alert("관리자 인증이 만료되었습니다. 다시 로그인해주세요.");
+        openProfitModal();
+        return;
+      }
+      alert(d.message); return;
+    }
+    renderProfit(d.result);
+    document.getElementById("profit-modal").classList.add("open");
+    // 변경된 변수로 견적도 재계산
+    if (selV) doCalc();
+  } catch(e) { alert("오류: "+e.message); }
+}
+
+function closeProfitModal() { document.getElementById("profit-modal").classList.remove("open"); }
+
+function renderProfit(r) {
+  const c = r.cost, pf = r.profit, sm = r.sim, v = r.vehicle;
+  const pct = n => (n*100).toFixed(1) + "%";
+  const transferRow = c.transfer ? `<tr><td class="pfl">이전비용</td><td class="pfv">${W(c.transfer)}</td><td class="pfv">${W(c.transfer)}</td></tr>` : "";
+
+  document.getElementById("profit-doc").innerHTML = `
+    <!-- 탭 메뉴 -->
+    <div class="pf-tabs">
+      <button class="pf-tab on" onclick="pfTab(0)">수익분석</button>
+      <button class="pf-tab" onclick="pfTab(1)">일반시장 진입 시뮬레이션</button>
+      <button class="pf-tab" onclick="pfTab(2)">위약 시뮬레이션</button>
+    </div>
+
+    <!-- 탭 0: 수익분석 -->
+    <div class="pf-tabcontent" id="pftab-0">
+      <div class="pf-section">
+        <div class="pf-title">차량 / 적용 변수</div>
+        <table class="pft">
+          <tr><td class="pfl">차량</td><td class="pfv" colspan="2">${v.브랜드명} ${v.시리즈명} ${v.라인업명}</td></tr>
+          <tr><td class="pfl">차량가격</td><td class="pfv" colspan="2">${W(r.input.carPrice)}</td></tr>
+          <tr><td class="pfl">보증금율 / 선납금율</td><td class="pfv" colspan="2">${(r.input.depositRate*100).toFixed(0)}% / ${(r.input.prepayRate*100).toFixed(0)}%</td></tr>
+          <tr><td class="pfl">이자수익 금리</td><td class="pfv" colspan="2">${(r.input.interestRate*100).toFixed(1)}%</td></tr>
+          <tr><td class="pfl">수수료</td><td class="pfv" colspan="2">${W(r.input.feeAmount)}</td></tr>
+          <tr><td class="pfl">조달기준 비율</td><td class="pfv" colspan="2">${(r.input.fundRatio*100).toFixed(0)}%</td></tr>
+        </table>
+      </div>
+      <div class="pf-section">
+        <table class="pft2">
+          <thead><tr><th class="pf2h">구분</th><th class="pf2h">48개월</th><th class="pf2h">60개월</th></tr></thead>
+          <tbody>
+            <tr class="pf2sec"><td colspan="3">원비용 구성</td></tr>
+            <tr><td class="pfl">구입가 <span style="font-size:11px">(차량가 ÷ 1.1)</span></td><td class="pfv">${W(Math.round(r.input.carPrice/1.1))}</td><td class="pfv">${W(Math.round(r.input.carPrice/1.1))}</td></tr>
+            <tr><td class="pfl">취득세</td><td class="pfv">${W(c.acqTax)}</td><td class="pfv">${W(c.acqTax)}</td></tr>
+            <tr><td class="pfl">채권</td><td class="pfv">${W(c.bond)}</td><td class="pfv">${W(c.bond)}</td></tr>
+            <tr><td class="pfl">서비스비용</td><td class="pfv">${W(c.agency48)}</td><td class="pfv">${W(c.agency60)}</td></tr>
+            <tr><td class="pfl">자동차세${c.carTaxDiscount > 0 ? ' <span style="font-size:10px;color:#e67e22">(차령 경감 ' + (c.carTaxDiscount*100).toFixed(0) + '% 적용)</span>' : ''}</td><td class="pfv">${W(c.carTax48)}</td><td class="pfv">${W(c.carTax60)}</td></tr>
+            <tr class="pf2hl"><td class="pfl">원비용</td><td class="pfv">${W(c.realCost48)}</td><td class="pfv">${W(c.realCost60)}</td></tr>
+
+            <tr class="pf2sec"><td colspan="3">렌트료 계산</td></tr>
+            <tr><td class="pfl">원비용 <span style="font-size:11px">(구입가÷1.1 + 취득세 + 채권 + 서비스비용 + 자동차세)</span></td><td class="pfv">${W(c.realCost48)}</td><td class="pfv">${W(c.realCost60)}</td></tr>
+            <tr><td class="pfl">PMT (${(r.input.interestRate*100).toFixed(1)}%/12, 기간, 원비용)</td><td class="pfv">${W(c.pmtLease48)}</td><td class="pfv">${W(c.pmtLease60)}</td></tr>
+            <tr><td class="pfl">추가P 월</td><td class="pfv">+${W(c.extraPMonthly48)}</td><td class="pfv">+${W(c.extraPMonthly60)}</td></tr>
+            <tr><td class="pfl">올림분</td><td class="pfv">+${W(c.roundingRaw48)}</td><td class="pfv">+${W(c.roundingRaw60)}</td></tr>
+            <tr><td class="pfl">월 대여료</td><td class="pfv">${W(c.monthlyLease48)}</td><td class="pfv">${W(c.monthlyLease60)}</td></tr>
+            <tr><td class="pfl">선납금 차감</td><td class="pfv">${W(c.finalRent48 - c.monthlyLease48)}</td><td class="pfv">${W(c.finalRent60 - c.monthlyLease60)}</td></tr>
+            <tr class="pf2hl"><td class="pfl">실납입 대여료</td><td class="pfv">${W(c.finalRent48)}</td><td class="pfv">${W(c.finalRent60)}</td></tr>
+            <tr><td class="pfl">공급가액 / 부가세</td><td class="pfv">${W(Math.round(c.monthlyLease48/1.1))} / ${W(c.monthlyLease48-Math.round(c.monthlyLease48/1.1))}</td><td class="pfv">${W(Math.round(c.monthlyLease60/1.1))} / ${W(c.monthlyLease60-Math.round(c.monthlyLease60/1.1))}</td></tr>
+
+            <tr class="pf2sec"><td colspan="3">총 수익</td></tr>
+            <tr><td class="pfl">렌트료 수익 <span style="font-size:11px">(실납입 ÷ 1.1 × 기간)</span></td><td class="pfv">${W(c.rentRevenue48)}</td><td class="pfv">${W(c.rentRevenue60)}</td></tr>
+            <tr><td class="pfl">선납금 <span style="font-size:11px">(선납금 ÷ 1.1)</span></td><td class="pfv">${W(c.prepaySupply48)}</td><td class="pfv">${W(c.prepaySupply60)}</td></tr>
+            <tr><td class="pfl">잔존매각 <span style="font-size:11px">(보증금 ÷ 1.1)</span></td><td class="pfv">${W(c.residualSale48)}</td><td class="pfv">${W(c.residualSale60)}</td></tr>
+            <tr class="pf2hl"><td class="pfl">총 수익 계</td><td class="pfv">${W(c.totalRevenue48)}</td><td class="pfv">${W(c.totalRevenue60)}</td></tr>
+
+            <tr class="pf2sec"><td colspan="3">총 비용</td></tr>
+            <tr><td class="pfl">취득원가 <span style="font-size:11px">(구입가÷1.1 + 취득세 + 채권)</span></td><td class="pfv">${W(c.acquisition48)}</td><td class="pfv">${W(c.acquisition60)}</td></tr>
+            <tr><td class="pfl">조달이자 <span style="font-size:11px">(7%, 기간별 PMT)</span></td><td class="pfv">${W(c.fundInterest48)}</td><td class="pfv">${W(c.fundInterest60)}</td></tr>
+            <tr><td class="pfl">GPS 비용</td><td class="pfv">${W(c.gps48)}</td><td class="pfv">${W(c.gps60)}</td></tr>
+            <tr><td class="pfl">자동차세 <span style="font-size:11px;color:#e67e22;">${c.carTaxDiscount > 0 ? '(차령 경감 ' + (c.carTaxDiscount*100).toFixed(0) + '% 적용)' : ''}</span></td><td class="pfv">${W(c.carTax48)}</td><td class="pfv">${W(c.carTax60)}</td></tr>
+            <tr><td class="pfl">수수료</td><td class="pfv">${W(c.fee)}</td><td class="pfv">${W(c.fee)}</td></tr>
+            <tr><td class="pfl">추가P <span style="font-size:11px">(올림 전 실수수료)</span></td><td class="pfv">${W(c.extraPCost)}</td><td class="pfv">${W(c.extraPCost)}</td></tr>
+            <tr class="pf2hl"><td class="pfl">총 비용 계</td><td class="pfv">${W(c.totalCost48)}</td><td class="pfv">${W(c.totalCost60)}</td></tr>
+
+            <tr class="pf2profit"><td class="pfl">순 이익 (총)</td><td class="pfv">${W(pf.netProfit48)}</td><td class="pfv">${W(pf.netProfit60)}</td></tr>
+            <tr class="pf2profit"><td class="pfl">순 이익 (월)</td><td class="pfv">${W(Math.round(pf.netProfit48/48))}</td><td class="pfv">${W(Math.round(pf.netProfit60/60))}</td></tr>
+            <tr class="pf2profit"><td class="pfl">총 수익율</td><td class="pfv">${pct(pf.profitRate48)}</td><td class="pfv">${pct(pf.profitRate60)}</td></tr>
+            <tr class="pf2profit"><td class="pfl">연간 수익율</td><td class="pfv">${pct(pf.annualProfitRate48)}</td><td class="pfv">${pct(pf.annualProfitRate60)}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 탭 1: 일반시장 진입 시뮬레이션 -->
+    <div class="pf-tabcontent" id="pftab-1" style="display:none">
+      <div class="pf-section">
+        <div class="pf-title">입력값</div>
+        <table class="pft">
+          <tr><td class="pfl">보험료 (연간)</td><td class="pfv">${W(r.input.insurance)}</td></tr>
+          <tr><td class="pfl">예상 매각가 (48개월)</td><td class="pfv">${W(r.input.salePrice48)}</td></tr>
+          <tr><td class="pfl">예상 매각가 (60개월)</td><td class="pfv">${W(r.input.salePrice60)}</td></tr>
+        </table>
+      </div>
+      <div class="pf-section">
+        <table class="pft2">
+          <thead><tr><th class="pf2h">구분</th><th class="pf2h">48개월</th><th class="pf2h">60개월</th></tr></thead>
+          <tbody>
+            <tr class="pf2sec"><td colspan="3">여유자금 분석</td></tr>
+            <tr><td class="pfl">월 여유자금 <span style="font-size:11px">(렌트료/1.1 − 월조달이자 − GPS7천)</span></td><td class="pfv ${sm.monthlyFreeFlow48 < 0 ? 'pf2danger' : ''}">${W(sm.monthlyFreeFlow48)}${sm.monthlyFreeFlow48 < 0 ? ' ⚠️' : ''}</td><td class="pfv ${sm.monthlyFreeFlow60 < 0 ? 'pf2danger' : ''}">${W(sm.monthlyFreeFlow60)}${sm.monthlyFreeFlow60 < 0 ? ' ⚠️' : ''}</td></tr>
+            <tr><td class="pfl">총 여유자금 (월여유자금 × 기간)</td><td class="pfv">${W(sm.totalFreeFlow48)}</td><td class="pfv">${W(sm.totalFreeFlow60)}</td></tr>
+            <tr class="pf2hl"><td class="pfl">일반시장 진입비용 (총여유자금 − 자동차세)</td><td class="pfv">${W(sm.marketEntryCost48)}</td><td class="pfv">${W(sm.marketEntryCost60)}</td></tr>
+
+            <tr class="pf2sec"><td colspan="3">일반시장 진입 렌트료</td></tr>
+            <tr><td class="pfl">월 조달이자 (PMT 7%/12)</td><td class="pfv">${W(Math.round(c.fundInterest48/48))}</td><td class="pfv">${W(Math.round(c.fundInterest60/60))}</td></tr>
+            <tr><td class="pfl">보험료/월</td><td class="pfv">${W(Math.round(r.input.insurance/12))}</td><td class="pfv">${W(Math.round(r.input.insurance/12))}</td></tr>
+            <tr><td class="pfl">월 여유자금 차감</td><td class="pfv">-${W(sm.monthlyFreeFlow48)}</td><td class="pfv">-${W(sm.monthlyFreeFlow60)}</td></tr>
+            <tr class="pf2hl"><td class="pfl">일반시장 진입 렌트료</td><td class="pfv">${W(sm.marketRent48)}</td><td class="pfv">${W(sm.marketRent60)}</td></tr>
+
+            <tr class="pf2sec"><td colspan="3">총 수익</td></tr>
+            <tr><td class="pfl">총 렌트료 수익 (진입렌트료 × 기간)</td><td class="pfv">${W(sm.totalRentRevenue48)}</td><td class="pfv">${W(sm.totalRentRevenue60)}</td></tr>
+            <tr><td class="pfl">처분이익 (예상 매각가)</td><td class="pfv">${W(sm.disposalProfit48)}</td><td class="pfv">${W(sm.disposalProfit60)}</td></tr>
+            <tr class="pf2profit"><td class="pfl">총 수익 (렌트료수익 + 처분이익)</td><td class="pfv">${W(sm.totalRevenue48)}</td><td class="pfv">${W(sm.totalRevenue60)}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 탭 2: 위약 시뮬레이션 -->
+    <div class="pf-tabcontent" id="pftab-2" style="display:none">
+      <div class="pf-section">
+        <div class="pf-title">위약 시뮬레이션</div>
+        <div style="padding:12px 16px">
+          <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+            <div>
+              <label style="font-size:13px;font-weight:600;color:var(--text2)">계약기간</label><br>
+              <select id="breach-period" style="margin-top:4px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:14px">
+                <option value="48">48개월</option>
+                <option value="60">60개월</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:13px;font-weight:600;color:var(--text2)">중도해지 개월수</label><br>
+              <input type="number" id="breach-month" placeholder="예: 24" min="1" max="60"
+                style="margin-top:4px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:14px;width:120px">
+            </div>
+            <div style="padding-top:18px">
+              <button onclick="calcBreach()" style="padding:7px 20px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:700">계산</button>
+            </div>
+          </div>
+          <div id="breach-result" style="display:none">
+            <table class="pft2" style="margin-top:8px">
+              <thead><tr><th class="pf2h">구분</th><th class="pf2h">금액</th><th class="pf2h">비고</th></tr></thead>
+              <tbody id="breach-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // 위약 계산 함수 저장
+  window._profitResult = r;
+}
+
+function pfTab(n) {
+  document.querySelectorAll(".pf-tab").forEach((t,i) => t.classList.toggle("on", i===n));
+  document.querySelectorAll(".pf-tabcontent").forEach((t,i) => t.style.display = i===n ? "" : "none");
+}
+
+function calcBreach() {
+  const r = window._profitResult;
+  if (!r) return;
+  const period = parseInt(document.getElementById("breach-period").value);
+  const month = parseInt(document.getElementById("breach-month").value);
+  if (!month || month < 1 || month >= period) {
+    alert("중도해지 개월수를 올바르게 입력해주세요 (1 ~ " + (period-1) + ")"); return;
+  }
+
+  const c = r.cost, pf = r.profit;
+  const finalRent  = period === 48 ? c.finalRent48  : c.finalRent60;
+  const deposit    = Math.round(r.input.carPrice * r.input.depositRate);
+  const netProfit  = period === 48 ? pf.netProfit48 : pf.netProfit60;
+
+  const remaining   = period - month;
+  const paidRatio   = month / period;
+  const remainRatio = 1 - paidRatio;
+
+  // 위약채권 = max(0, 남은렌트료 × 30% - 보증금)
+  const remainLease    = finalRent * remaining;
+  const breachClaim    = Math.round(remainLease * 0.3);
+  const netBreachClaim = Math.max(0, breachClaim - deposit);
+
+  // 손실금액 = (취득세+채권+서비스비용+조달이자 전체) × 남은비율
+  const agencyForPeriod = period === 48 ? c.agency48 : c.agency60;
+  const fundInt = period === 48 ? c.fundInterest48 : c.fundInterest60;
+  const totalCost = c.acqTax + c.bond + agencyForPeriod + fundInt;
+  const totalLoss = Math.round(totalCost * remainRatio);
+
+  // 이미 회수한 이익 = 순이익(총) × 납입비율
+  const recoveredProfit = Math.round(netProfit * paidRatio);
+
+  // 최종 손익 = 위약채권 - 손실금액 + 이미 회수한 이익
+  const netResult = netBreachClaim - totalLoss + recoveredProfit;
+  const isSafe = netResult >= 0;
+
+  const tbody = document.getElementById("breach-tbody");
+  tbody.innerHTML = `
+    <tr class="pf2sec"><td colspan="3">위약채권</td></tr>
+    <tr><td class="pfl">납입 / 남은 개월</td><td class="pfv">${month}개월 납입</td><td class="pfv">${remaining}개월 남음</td></tr>
+    <tr><td class="pfl">남은 렌트료 합계</td><td class="pfv">${W(remainLease)}</td><td class="pfv">월 ${W(finalRent)} × ${remaining}개월</td></tr>
+    <tr><td class="pfl">위약채권 (남은렌트료 × 30%)</td><td class="pfv">${W(breachClaim)}</td><td class="pfv"></td></tr>
+    <tr><td class="pfl">보증금 차감</td><td class="pfv">-${W(deposit)}</td><td class="pfv">${breachClaim < deposit ? '⚠️ 위약채권이 보증금보다 작음' : ''}</td></tr>
+    <tr class="pf2hl"><td class="pfl">실 위약채권</td><td class="pfv">${W(netBreachClaim)}</td><td class="pfv">${netBreachClaim === 0 ? '(0원 처리)' : ''}</td></tr>
+
+    <tr class="pf2sec"><td colspan="3">손실금액 (전체비용 × ${(remainRatio*100).toFixed(1)}% 남은비율)</td></tr>
+    <tr><td class="pfl">취득세 (비례)</td><td class="pfv">${W(Math.round(c.acqTax * remainRatio))}</td><td class="pfv">${W(c.acqTax)} × ${(remainRatio*100).toFixed(1)}%</td></tr>
+    <tr><td class="pfl">채권 (비례)</td><td class="pfv">${W(Math.round(c.bond * remainRatio))}</td><td class="pfv">${W(c.bond)} × ${(remainRatio*100).toFixed(1)}%</td></tr>
+    <tr><td class="pfl">서비스비용 (비례)</td><td class="pfv">${W(Math.round(agencyForPeriod * remainRatio))}</td><td class="pfv">${W(agencyForPeriod)} × ${(remainRatio*100).toFixed(1)}%</td></tr>
+    <tr><td class="pfl">조달이자 (비례)</td><td class="pfv">${W(Math.round(fundInt * remainRatio))}</td><td class="pfv">${W(fundInt)} × ${(remainRatio*100).toFixed(1)}%</td></tr>
+    <tr class="pf2hl"><td class="pfl">총 손실금액</td><td class="pfv">${W(totalLoss)}</td><td class="pfv"></td></tr>
+
+    <tr class="pf2sec"><td colspan="3">이미 회수한 이익 (납입비율 ${(paidRatio*100).toFixed(1)}%)</td></tr>
+    <tr><td class="pfl">순이익(총) × 납입비율</td><td class="pfv">+${W(recoveredProfit)}</td><td class="pfv">${W(netProfit)} × ${(paidRatio*100).toFixed(1)}%</td></tr>
+
+    <tr class="pf2sec"><td colspan="3">위약 손익 판단</td></tr>
+    <tr class="${isSafe ? 'pf2profit' : 'pf2danger'}">
+      <td class="pfl">실위약채권 - 손실금액 + 회수이익</td>
+      <td class="pfv">${W(netResult)}</td>
+      <td class="pfv">${isSafe ? '✅ 안전 (회수 가능)' : '❌ 위험 (손실 발생)'}</td>
+    </tr>
+  `;
+  document.getElementById("breach-result").style.display = "block";
+}
 </script>
 </body>
 </html>
